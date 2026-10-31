@@ -1,0 +1,23 @@
+{
+  "name": "azaz-business",
+  "private": true,
+  "version": "0.2.0",
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "node --test --experimental-strip-types \"tests/**/*.test.ts\"",
+    "test:smoke": "node tests/integration/api.mjs",
+    "test:all": "npm test && npm run test:smoke",
+    "lint": "eslint .",
+    "security": "npm audit --audit-level=high",
+    "build": "tsc",
+    "start": "node dist/apps/api/src/server.js"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "@types/node": "^22.18.0",
+    "typescript": "^5.9.0"
+  }
+}
