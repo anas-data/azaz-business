@@ -28,6 +28,7 @@ const server = createServer(async (req, res) => {
   try {
     const url = new URL(req.url || '/', 'http://localhost');
     if (req.method === 'GET' && url.pathname === '/health') return json(res, 200, health());
+    if (req.method === 'GET' && url.pathname === '/') return json(res, 200, { service: 'azaz-business-api', version: '0.2.0', status: 'ok', endpoints: ['GET /health', 'GET /api/v1/products', 'POST /api/v1/products', 'GET /api/v1/sales', 'POST /api/v1/sales'] });
     if (url.pathname.startsWith('/api/v1/') && !auth(req)) return fail(res, 401, 'UNAUTHENTICATED', 'Authentication required');
     const organizationId = org(req);
     if (url.pathname.startsWith('/api/v1/') && !organizationId) return fail(res, 400, 'TENANT_REQUIRED', 'X-Organization-Id is required');

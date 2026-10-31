@@ -5,6 +5,7 @@ const send=(res,status,data)=>{res.writeHead(status,{'content-type':'application
 const read=async req=>{let s='';for await(const c of req)s+=c;return s?JSON.parse(s):{};};
 const server=createServer(async(req,res)=>{try{const u=new URL(req.url||'/', 'http://localhost');
 if(req.method==='GET'&&u.pathname==='/health')return send(res,200,{status:'ok',service:'azaz-business-api',version:'0.2.0',time:new Date().toISOString()});
+if(req.method==='GET'&&u.pathname==='/')return send(res,200,{service:'azaz-business-api',version:'0.2.0',status:'ok',endpoints:['GET /health','GET /api/v1/products','POST /api/v1/products','GET /api/v1/sales','POST /api/v1/sales']});
 if(!u.pathname.startsWith('/api/v1/'))return send(res,404,{error:{code:'NOT_FOUND',message:'Route not found'}});
 if(!req.headers.authorization?.startsWith('Bearer '))return send(res,401,{error:{code:'UNAUTHENTICATED',message:'Authentication required'}});
 const org=req.headers['x-organization-id'];if(!org)return send(res,400,{error:{code:'TENANT_REQUIRED',message:'X-Organization-Id is required'}});

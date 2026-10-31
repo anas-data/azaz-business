@@ -110,3 +110,22 @@ npm run build         # بناء dist/
 npm run security      # npm audit
 make verify           # البوابة النهائية
 ```
+
+## 8. ترقية سلسلة الأدوات (2026-10-31)
+
+| العنصر | قبل | بعد |
+| --- | --- | --- |
+| `typescript` | 5.9.3 | **7.0.2** |
+| `@types/node` | 22.20.5 (غير مثبّتة) | **22.20.5** (مثبّتة ومقفلة) |
+| Node المطلوب (`engines`) | `>=22` | `>=22.18` |
+| تشغيل TypeScript مباشرة | `--experimental-strip-types` (مهجور) | تجريد الأنواع الأصلي دون أعلام |
+| `tsconfig.json` | — | `"types": ["node"]` (إلزامي في TS 7 لإدراج أنواع Node) |
+
+### ما تغيّر
+- **TS 7** لم يعد يضمّن `@types/*` تلقائياً؛ أُضيف `"types": ["node"]` إلى `tsconfig.json` ليبقى `tsc --noEmit` نظيفاً.
+- **إسقاط العلم المهجور**: Node 22.18+ يفعّل تجريد أنواع TypeScript افتراضياً، لذا أُزيل `--experimental-strip-types` من سكربت `test` ومن أمر تشغيل الخادم داخل اختبار التكامل. رُفع `engines` إلى `>=22.18` كحد أدنى حقيقي.
+- **مسار الجذر `GET /`**: يُرجع الآن بطاقة تعريف بالخدمة ونقاط النهاية (كان 404)، لتكون المعاينة الحيّة مفهومة، مع اختبار يغطيها.
+- `rewriteRelativeImportExtensions` ما زال يعمل في TS 7: البناء ينتج `dist/apps/api/src/server.js` مع تحويل `./health.ts` إلى `./health.js` (مُتحقَّق منه بالتشغيل الفعلي).
+
+### نتيجة إعادة الفحص بعد الترقية
+`npm test` → 8/8 ناجح · `npm run test:smoke` → ناجح · `npm run typecheck` → نظيف · `npm run build` + تشغيل `dist` → يعمل · `npm audit` → 0 ثغرات · `make verify` → ناجح.

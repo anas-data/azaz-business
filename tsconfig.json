@@ -10,7 +10,10 @@
     "noEmitOnError": true,
     "outDir": "dist",
     "allowImportingTsExtensions": true,
-    "rewriteRelativeImportExtensions": true
+    "rewriteRelativeImportExtensions": true,
+    "types": [
+      "node"
+    ]
   },
   "include": [
     "apps/api/src/**/*.ts",

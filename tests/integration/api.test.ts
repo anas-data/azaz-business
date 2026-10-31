@@ -38,7 +38,7 @@ async function waitForHealth(url: string, timeoutMs = 15_000): Promise<void> {
 test.before(async () => {
   const port = await freePort();
   base = `http://127.0.0.1:${port}`;
-  proc = spawn(process.execPath, ['--experimental-strip-types', 'apps/api/src/server.ts'], {
+  proc = spawn(process.execPath, ['apps/api/src/server.ts'], {
     stdio: ['ignore', 'pipe', 'pipe'],
     env: { ...process.env, PORT: String(port) },
   });
@@ -55,6 +55,15 @@ test('health endpoint works', async () => {
   const body = await response.json() as { status: string; service: string };
   assert.equal(body.status, 'ok');
   assert.equal(body.service, 'azaz-business-api');
+});
+
+test('root route describes the service', async () => {
+  const response = await fetch(`${base}/`);
+  assert.equal(response.status, 200);
+  const body = await response.json() as { service: string; status: string; endpoints: string[] };
+  assert.equal(body.service, 'azaz-business-api');
+  assert.equal(body.status, 'ok');
+  assert.ok(body.endpoints.includes('GET /health'));
 });
 
 test('protected endpoints reject anonymous callers', async () => {
