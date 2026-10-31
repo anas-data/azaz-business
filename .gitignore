@@ -1,0 +1,14 @@
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+node_modules/
+.dart_tool/
+build/
+coverage/
+.idea/
+.vscode/
+.DS_Store
+dist/
